@@ -20,7 +20,7 @@ header("Content-Type:text/html; charset=utf-8");
 
 
     //資料庫Sql query語法
-    $sql = "SELECT DISTINCT address FROM light order by ID DESC LIMIT 30";
+    $sql = "SELECT DISTINCT address FROM light order by ID DESC LIMIT 50";
 
     //執行query語法
     $result = mysql_query($sql);

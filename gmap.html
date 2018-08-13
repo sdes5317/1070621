@@ -33,28 +33,68 @@
     var mylngs = [120.6743384];
     var mycenter = { lat: mylats[0], lng: mylngs[0] };
     var mylating = [{ lat: 24.121807, lng: 120.672575 }, { lat: 24.123070, lng: 120.675628 }];
-    var myadress = ["中興大學", "台灣大學"];
+    var myaddress = ["中興大學", "台灣大學"];
 
-function initMap(){
-  myinit();
-  geocodeAddress(myadress[0],geocoder,map);
-}
+    function initMap() {
+      myinit();
+
+
+
+    }
 
     function myinit() {
+
+
+
       map = new google.maps.Map(document.getElementById('map'), {
         center: mycenter,
-        zoom: 18
+        zoom: 8
       });
       //呼叫geo轉址功能，直接搜尋位置，輸出座標
       geocoder = new google.maps.Geocoder();
-      
-      
-      for (i = 0; i < 2; i++)
-        var marker = new google.maps.Marker({ position: mylating[i], map: map});
+
+
+      // for (i = 0; i < 2; i++)
+      //   var marker = new google.maps.Marker({ position: mylating[i], map: map});
+
+
+
+      $.ajax({
+        url: 'database.php',
+        data: '',
+        dataType: 'json',
+        success: Getdata
+
+      })
 
     }
+
+    function Getdata(data) {
+      var dataLength = data.length;
+
+      for (var i = 0; i < dataLength; i++) {
+        if ($.inArray(data[i]['address'].toString, myaddress) == -1) {
+          myaddress.push(data[i]['address'].toString());
+          //alert(data[i]['address'].toString())
+        }
+      }
+time=500;
+      for (var i = 0; i < myaddress.length; i++) {
+        delayF(i,time);
+        time+=800;
+      }
+
+      alert(myaddress);
+    }
+
+    function delayF(round,time){
+      
+      setTimeout(geocodeAddress,time,myaddress[round], geocoder, map);
+    }
+
+
     ////////////////////////////
-    function geocodeAddress(address, geocoder, resultsMap) {
+    function geocodeAddress(address, geocoder, resultsMap, data) {
 
       geocoder.geocode({ 'address': address }, function (results, status) {
         if (status === 'OK') {
@@ -64,7 +104,7 @@ function initMap(){
             position: results[0].geometry.location//經緯度資料
           });
         } else {
-          alert('Geocode was not successful for the following reason: ' + status);
+          //alert('Geocode was not successful for the following reason: ' + address);
         }
       });
     }
